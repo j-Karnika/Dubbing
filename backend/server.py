@@ -245,12 +245,16 @@ async def process_dubbing(job_id: str):
         )
         
         transcription = await transcribe_audio(audio_path)
-        if not transcription:
+        if transcription is None:
             await db.dubbing_jobs.update_one(
                 {"id": job_id},
                 {"$set": {"status": "error", "error_message": "Transcription failed"}}
             )
             raise HTTPException(status_code=500, detail="Transcription failed")
+        
+        # Handle empty transcription (no speech detected)
+        if not transcription.strip():
+            transcription = "No speech detected in the audio."
         
         # Step 3: Translate text
         await db.dubbing_jobs.update_one(
