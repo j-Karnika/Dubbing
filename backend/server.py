@@ -117,7 +117,10 @@ async def transcribe_audio(audio_path: str) -> Optional[str]:
         import whisper
         model = whisper.load_model("base")  # Using base model for CPU efficiency
         result = model.transcribe(audio_path)
-        return result["text"]
+        transcription = result["text"].strip()
+        
+        # Return the transcription even if empty - let the caller decide how to handle it
+        return transcription
     except Exception as e:
         print(f"Transcription error: {e}")
         return None
