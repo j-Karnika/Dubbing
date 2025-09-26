@@ -182,10 +182,11 @@ async def upload_video(
     target_language: str = Form(...)
 ):
     """Upload video file and start dubbing process"""
+    # Validate file type first (before try block to avoid wrapping in 500 error)
+    if not file.filename.lower().endswith(('.mp4', '.avi', '.mov', '.mkv')):
+        raise HTTPException(status_code=400, detail="Invalid video format")
+    
     try:
-        # Validate file type
-        if not file.filename.lower().endswith(('.mp4', '.avi', '.mov', '.mkv')):
-            raise HTTPException(status_code=400, detail="Invalid video format")
         
         # Create job ID and save file
         job_id = str(uuid.uuid4())
