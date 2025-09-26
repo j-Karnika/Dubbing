@@ -19,6 +19,9 @@ import librosa
 import soundfile as sf
 import numpy as np
 from emergentintegrations.llm.chat import LlmChat, UserMessage
+from gtts import gTTS
+from pydub import AudioSegment
+import io
 
 # Load environment variables
 load_dotenv()
